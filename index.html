@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>To My Love 💖</title>
+<title>Create Love Link 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -18,48 +19,59 @@ body {
   padding: 25px;
   border-radius: 15px;
   text-align: center;
-  width: 320px;
+  width: 340px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-input {
+input, select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ccc;
 }
 button {
   background: #ff4d6d;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-}
-button:hover {
-  background: #ff3355;
 }
 #linkBox {
   margin-top: 15px;
   word-break: break-all;
 }
-.copyBtn {
-  background: #6c63ff;
-  margin-top: 8px;
-}
 </style>
 </head>
+
 <body>
 
 <div class="card">
-  <h2>💖 To My Love 💖</h2>
+  <h2>💖 Create Love Link 💖</h2>
 
-  <input id="sender" placeholder="Your Name">
-  <input id="partner" placeholder="Partner Name">
+  <input id="sender" placeholder="Your Name 😎💖">
+  <input id="partner" placeholder="Partner Name 😍">
 
-  <button onclick="generateLink()">Share Love 💌</button>
+  <select id="senderGender">
+    <option value="">Your Gender</option>
+    <option value="m">Male ♂️</option>
+    <option value="f">Female ♀️</option>
+  </select>
+
+  <select id="partnerGender">
+    <option value="">Partner Gender</option>
+    <option value="f">Female ♀️</option>
+    <option value="m">Male ♂️</option>
+  </select>
+
+  <!-- 💍 Married confirmation -->
+  <label style="display:block;margin:10px 0;font-size:14px;">
+    <input type="checkbox" id="married"> 💍 We are married
+  </label>
+
+  <button onclick="generateLink()">Generate Love Link 💌</button>
+
   <div id="linkBox"></div>
 </div>
 
@@ -67,31 +79,50 @@ button:hover {
 function generateLink() {
   const sender = document.getElementById("sender").value.trim();
   const partner = document.getElementById("partner").value.trim();
+  const sg = document.getElementById("senderGender").value;
+  const pg = document.getElementById("partnerGender").value;
 
-  if (!sender || !partner) {
-    alert("Please enter both names 💕");
+  if (!sender || !partner || !sg || !pg) {
+    alert("Please fill all details 💕");
     return;
   }
 
+  sessionStorage.setItem("senderName", sender);
 
-  const s = btoa(unescape(encodeURIComponent(sender)));
-  const p = btoa(unescape(encodeURIComponent(partner)));
+  const y = btoa(unescape(encodeURIComponent(partner)));
+  const g = (sg + pg).toLowerCase();
+  const m = document.getElementById("married").checked ? "1" : "0";
 
+  const baseURL =
+    location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
 
-  const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
-  const link = `${baseURL}love.html?x=${s}&y=${p}`;
+  const link = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
 
   document.getElementById("linkBox").innerHTML = `
     <p>Send this link 💖</p>
-    <a href="${link}" target="_blank">${link}</a>
-    <button class="copyBtn" onclick="copyLink('${link}')">Copy Link 📋</button>
+    <input id="shareLink" value="${link}" readonly
+      style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+    <button id="copyBtn"
+      style="margin-top:8px;background:#4CAF50;color:#fff;border:none;
+             padding:8px;width:100%;border-radius:6px;cursor:pointer;">
+      📋 Copy Link
+    </button>
+    <p style="margin-top:8px;font-size:13px;color:#555;">
+      📌 Copy the link and share it with your partner 💕
+    </p>
   `;
 }
 
-function copyLink(link) {
-  navigator.clipboard.writeText(link);
-  alert("Link copied 💕 Send it to your love!");
-}
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "copyBtn") {
+    const input = document.getElementById("shareLink");
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value);
+    e.target.innerText = "✅ Copied!";
+    setTimeout(() => e.target.innerText = "📋 Copy Link", 2000);
+  }
+});
 </script>
 
 </body>
