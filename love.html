@@ -6,73 +6,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Comic Sans MS', cursive;
-  overflow: hidden;
+@font-face {
+  font-family: 'LucySaidOk';
+  src: url('assets/fonts/LucySaidOk.ttf');
+}
+@font-face {
+  font-family: 'FarmhouseVal';
+  src: url('assets/fonts/FarmhouseValentines.ttf');
 }
 
-.box {
-  background: white;
-  padding: 25px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 350px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  z-index: 2;
+body{
+  margin:0;height:100vh;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  display:flex;justify-content:center;align-items:center;
+  font-family:'Comic Sans MS',cursive;
+  overflow:hidden;
+  transition:transform .1s ease;
 }
 
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+.box{
+  background:#fff;padding:25px;border-radius:20px;
+  text-align:center;width:90%;max-width:350px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 
-#yes {
-  background: #ff4d6d;
-  color: white;
+button{
+  padding:10px 20px;margin:10px;border:none;
+  border-radius:10px;font-size:16px;
+  cursor:pointer;transition:transform .2s ease;
 }
 
-#no {
-  background: #ccc;
-  position: absolute;
+#yes{background:#ff4d6d;color:#fff;}
+#no{background:#ccc;position:absolute;}
+
+#noMsg{margin-top:10px;transition:.3s;}
+
+.mode-love{
+  font-family:'FarmhouseVal',cursive;
+  color:#ff5c8a;
+  font-size:16px;
+}
+.mode-angry{font-family:Arial;color:#ff9800;font-weight:bold;}
+.mode-angrier{font-family:Arial;color:#ff3b3b;font-weight:800;}
+.mode-rage{font-family:'Arial Black';color:#b00020;font-style:italic;}
+
+#typeText{
+  font-family:'LucySaidOk',cursive;
+  font-size:20px;
+  color:#ff2f92;
+  opacity:0;
+  animation:fadeIn 1.8s ease forwards, glow 1.5s ease-in-out infinite alternate;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes glow{
+  from{text-shadow:0 0 5px #ff9acb;}
+  to{text-shadow:0 0 15px #ff2f92;}
 }
 
-/* Fireworks */
-.firework {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  animation: explode 1s ease-out forwards;
+.firework{
+  position:fixed;width:6px;height:6px;border-radius:50%;
+  animation:explode 1s ease-out forwards;
 }
-
-@keyframes explode {
-  from { transform: scale(1); opacity: 1; }
-  to { transform: scale(15); opacity: 0; }
+@keyframes explode{
+  from{transform:scale(1);opacity:1;}
+  to{transform:scale(15);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- KEEP AUDIO OUTSIDE dynamic content -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="assets/love.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" loop preload="auto"></audio>
+<audio id="noSound" src="assets/no_sound.mp3" preload="auto"></audio>
 
 <div class="box" id="mainBox">
   <h2 id="msg"></h2>
+
+  <p id="noMsg" class="mode-love">
+    baby 😘 sonna kelu "NO" thodathe 😁
+  </p>
+
   <img src="assets/heart.gif" width="120"><br><br>
 
   <button id="yes">YES 💖</button>
@@ -80,73 +96,82 @@ button {
 </div>
 
 <script>
-const params = new URLSearchParams(location.search);
-const partner = atob(params.get("y") || "");
-const music = document.getElementById("bgMusic");
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
+const params=new URLSearchParams(location.search);
+const partner=decodeURIComponent(escape(atob(params.get("y")||"")));
+const genderCombo=(params.get("g")||"").toLowerCase().trim();
+const married=params.get("m")==="1";
 
-let yesScale = 1;
+const music=document.getElementById("bgMusic");
+const yesBtn=document.getElementById("yes");
+const noBtn=document.getElementById("no");
+const noMsg=document.getElementById("noMsg");
+const noSound=document.getElementById("noSound");
 
-document.getElementById("msg").innerHTML =
-  `Hai ${partner} 💕<br>Will you be my Valentine?`;
-
-/* 😈 NO button logic */
-function evadeNo() {
-  // Move NO button
-  noBtn.style.left = Math.random() * 80 + "%";
-  noBtn.style.top = Math.random() * 80 + "%";
-
-  // Increase YES size by +20%
-  yesScale += 0.2;
-  yesBtn.style.transform = `scale(${yesScale})`;
+if(!married){
+  if(genderCombo==="mf")music.src="assets/love_1.mp3";
+  else if(genderCombo==="fm")music.src="assets/love_2.mp3";
+  else music.src="assets/love_1.mp3";
+}else{
+  if(genderCombo==="mf")music.src="assets/love_3.mp3";
+  else if(genderCombo==="fm")music.src="assets/love_4.mp3";
+  else music.src="assets/love_3.mp3";
 }
 
-noBtn.addEventListener("mouseover", evadeNo);
-noBtn.addEventListener("touchstart", evadeNo);
+document.getElementById("msg").innerHTML=
+`Hai ${partner} 💕<br>Will you be my Valentine?`;
 
-/* 💖 YES CLICK */
-yesBtn.addEventListener("click", () => {
-  music.volume = 0.35;   // soft romantic volume
-  music.play().catch(() => {});
+let yesScale=1,noCount=0;
+function evadeNo(){
+  noBtn.style.left=Math.random()*80+"%";
+  noBtn.style.top=Math.random()*80+"%";
+  yesScale+=.2;
+  yesBtn.style.transform=`scale(${yesScale})`;
 
-  document.getElementById("mainBox").innerHTML = `
+  if(navigator.vibrate)navigator.vibrate(80);
+  noSound.currentTime=0; noSound.play();
+
+  noCount++;
+  if(noCount===1){
+    noMsg.className="mode-angry";
+    noMsg.innerText="sonna kekke matiyaa 😠!!!!...";
+  }else if(noCount===2){
+    noMsg.className="mode-angrier";
+    noMsg.innerText="last warning no ah thodathe 😡!!!!...";
+  }else if(noCount===3){
+    noMsg.className="mode-rage";
+    noMsg.innerText="sonna kekka matta ipo paaru 😏!!!!...";
+    setTimeout(()=>noBtn.style.display="none",2000);
+  }
+}
+noBtn.addEventListener("mouseover",evadeNo);
+noBtn.addEventListener("touchstart",evadeNo);
+
+yesBtn.addEventListener("click",()=>{
+  if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
+  music.volume=.75; music.play().catch(()=>{});
+
+  const successText = married
+    ? "Forever us 💍 My love, my life, my everything 💖"
+    : "Best decision ever 💖 I love you endlessly 😘";
+
+  document.getElementById("mainBox").innerHTML=`
     <h1>YAY 😍</h1>
-    <p id="typeText"></p>
+    <p id="typeText">${successText}</p>
     <img src="assets/love.png" width="200">
   `;
-
-  typeWriter("Best decision ever 💖 I love you endlessly 😘");
   fireworks();
 });
 
-/* 💬 TYPEWRITER */
-function typeWriter(text) {
-  let i = 0;
-  const target = document.getElementById("typeText");
-  const speed = 60;
-
-  function typing() {
-    if (i < text.length) {
-      target.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, speed);
-    }
-  }
-  typing();
-}
-
-/* 🎆 FIREWORKS */
-function fireworks() {
-  setInterval(() => {
-    const f = document.createElement("div");
-    f.className = "firework";
-    f.style.left = Math.random() * 100 + "%";
-    f.style.top = Math.random() * 100 + "%";
-    f.style.background = `hsl(${Math.random()*360},100%,60%)`;
+function fireworks(){
+  setInterval(()=>{
+    const f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"%";
+    f.style.top=Math.random()*100+"%";
+    f.style.background=`hsl(${Math.random()*360},100%,60%)`;
     document.body.appendChild(f);
-    setTimeout(() => f.remove(), 1000);
-  }, 200);
+    setTimeout(()=>f.remove(),1000);
+  },200);
 }
 </script>
 
