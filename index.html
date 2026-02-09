@@ -38,9 +38,7 @@ button{
   border-radius:8px;
   cursor:pointer;
 }
-#linkBox{
-  margin-top:15px;
-}
+#linkBox{margin-top:15px;}
 </style>
 </head>
 
@@ -99,6 +97,9 @@ function generateLink(){
     ? "💍 For my forever person…\n🌹 Still choosing you, every single day ❤️\n👉 click here\n\n"
     : "💖 I made something special just for you…\n💕 Open it with your heart 🥰\n👉 click here\n\n";
 
+  // 🔐 ZERO-WIDTH SPACE FIX → hides link preview
+  const hiddenLink="https://\u200B"+link.replace("https://","");
+
   document.getElementById("linkBox").innerHTML=`
     <p style="font-size:14px;color:#555;">
       ${isMarried
@@ -114,7 +115,7 @@ function generateLink(){
       📋 Copy Link
     </button>
 
-    <a href="https://wa.me/?text=${encodeURIComponent(waText+link)}"
+    <a href="https://wa.me/?text=${encodeURIComponent(waText+hiddenLink)}"
        target="_blank"
        style="
          display:inline-block;
@@ -131,7 +132,7 @@ function generateLink(){
     </a>
 
     <p style="margin-top:8px;font-size:12px;color:#777;">
-      🔒 Copy the link or share — link is hidden behind <b>click here</b>
+      🔒 Link is hidden behind <b>click here</b>
     </p>
   `;
 }
