@@ -40,7 +40,6 @@ button {
 }
 #linkBox {
   margin-top: 15px;
-  word-break: break-all;
 }
 </style>
 </head>
@@ -65,7 +64,6 @@ button {
     <option value="m">Male ♂️</option>
   </select>
 
-  <!-- 💍 Married confirmation -->
   <label style="display:block;margin:10px 0;font-size:14px;">
     <input type="checkbox" id="married"> 💍 We are married
   </label>
@@ -99,16 +97,37 @@ function generateLink() {
   const link = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
 
   document.getElementById("linkBox").innerHTML = `
-    <p>Send this link 💖</p>
-    <input id="shareLink" value="${link}" readonly
-      style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+    <p style="margin-bottom:6px;">Send this link 💖</p>
+
+    <div style="margin-bottom:10px;">
+      <input id="shareLink"
+        value="${link}"
+        readonly
+        style="
+          width:100%;
+          padding:10px;
+          border-radius:8px;
+          border:1px solid #ccc;
+          font-size:13px;
+        ">
+    </div>
+
     <button id="copyBtn"
-      style="margin-top:8px;background:#4CAF50;color:#fff;border:none;
-             padding:8px;width:100%;border-radius:6px;cursor:pointer;">
+      style="
+        background:#4CAF50;
+        color:white;
+        border:none;
+        padding:10px;
+        width:100%;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:14px;
+      ">
       📋 Copy Link
     </button>
+
     <p style="margin-top:8px;font-size:13px;color:#555;">
-      📌 Copy the link and share it with your partner 💕
+      📌 Copy the link and share with your partner 💕
     </p>
   `;
 }
