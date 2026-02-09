@@ -97,49 +97,37 @@ function generateLink() {
   const link = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
 
   document.getElementById("linkBox").innerHTML = `
-    <p style="margin-bottom:6px;">Send this link 💖</p>
+    <p style="font-size:14px;color:#555;">
+      💕 I made something special just for you<br>
+      💖 Open this and feel my love
+    </p>
 
-    <div style="margin-bottom:10px;">
-      <input id="shareLink"
-        value="${link}"
-        readonly
-        style="
-          width:100%;
-          padding:10px;
-          border-radius:8px;
-          border:1px solid #ccc;
-          font-size:13px;
-        ">
-    </div>
+    <p style="margin:10px 0;">
+      👉 <a href="${link}" target="_blank"
+         style="color:#ff4d6d;font-weight:bold;text-decoration:none;">
+         click here
+      </a>
+    </p>
 
-    <button id="copyBtn"
-      style="
-        background:#4CAF50;
-        color:white;
-        border:none;
-        padding:10px;
-        width:100%;
-        border-radius:8px;
-        cursor:pointer;
-        font-size:14px;
-      ">
-      📋 Copy Link
+    <button id="shareBtn"
+      style="background:#ff4d6d;color:#fff;border:none;
+             padding:10px;width:100%;border-radius:8px;
+             cursor:pointer;">
+      💌 Share
     </button>
 
-    <p style="margin-top:8px;font-size:13px;color:#555;">
-      📌 Copy the link and share with your partner 💕
+    <p style="margin-top:8px;font-size:13px;color:#666;">
+      📌 Copy the link and share it with your partner 💞
     </p>
   `;
 }
 
 document.addEventListener("click", function(e) {
-  if (e.target && e.target.id === "copyBtn") {
-    const input = document.getElementById("shareLink");
-    input.select();
-    input.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(input.value);
-    e.target.innerText = "✅ Copied!";
-    setTimeout(() => e.target.innerText = "📋 Copy Link", 2000);
+  if (e.target && e.target.id === "shareBtn") {
+    const hiddenLink = document.querySelector('#linkBox a').href;
+    navigator.clipboard.writeText(hiddenLink);
+    e.target.innerText = "✅ Link Copied!";
+    setTimeout(() => e.target.innerText = "💌 Share", 2000);
   }
 });
 </script>
