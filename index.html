@@ -41,6 +41,11 @@ button {
 #linkBox {
   margin-top: 15px;
 }
+a.hiddenLink {
+  color:#ff4d6d;
+  font-weight:bold;
+  text-decoration:none;
+}
 </style>
 </head>
 
@@ -74,6 +79,8 @@ button {
 </div>
 
 <script>
+let generatedLink = "";
+
 function generateLink() {
   const sender = document.getElementById("sender").value.trim();
   const partner = document.getElementById("partner").value.trim();
@@ -94,7 +101,7 @@ function generateLink() {
   const baseURL =
     location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
 
-  const link = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
+  generatedLink = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
 
   document.getElementById("linkBox").innerHTML = `
     <p style="font-size:14px;color:#555;">
@@ -103,29 +110,24 @@ function generateLink() {
     </p>
 
     <p style="margin:10px 0;">
-      👉 <a href="${link}" target="_blank"
-         style="color:#ff4d6d;font-weight:bold;text-decoration:none;">
-         click here
+      👉 <a href="${generatedLink}" target="_blank" class="hiddenLink">
+        click here
       </a>
     </p>
 
-    <button id="shareBtn"
-      style="background:#ff4d6d;color:#fff;border:none;
-             padding:10px;width:100%;border-radius:8px;
-             cursor:pointer;">
+    <button id="shareBtn">
       💌 Share
     </button>
 
     <p style="margin-top:8px;font-size:13px;color:#666;">
-      📌 Copy the link and share it with your partner 💞
+      📌 Copy and share the love 💞
     </p>
   `;
 }
 
 document.addEventListener("click", function(e) {
   if (e.target && e.target.id === "shareBtn") {
-    const hiddenLink = document.querySelector('#linkBox a').href;
-    navigator.clipboard.writeText(hiddenLink);
+    navigator.clipboard.writeText(generatedLink);
     e.target.innerText = "✅ Link Copied!";
     setTimeout(() => e.target.innerText = "💌 Share", 2000);
   }
