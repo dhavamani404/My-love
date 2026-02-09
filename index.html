@@ -6,45 +6,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  text-align: center;
-  width: 340px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+.card{
+  background:#fff;
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+  width:340px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+input,select{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
 }
-button {
-  background: #ff4d6d;
-  color: white;
-  border: none;
-  padding: 12px;
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
+button{
+  background:#ff4d6d;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:8px;
+  cursor:pointer;
 }
-#linkBox {
-  margin-top: 15px;
-}
-a.hiddenLink {
-  color:#ff4d6d;
-  font-weight:bold;
-  text-decoration:none;
+#linkBox{
+  margin-top:15px;
 }
 </style>
 </head>
@@ -79,57 +74,76 @@ a.hiddenLink {
 </div>
 
 <script>
-let generatedLink = "";
+function generateLink(){
+  const sender=document.getElementById("sender").value.trim();
+  const partner=document.getElementById("partner").value.trim();
+  const sg=document.getElementById("senderGender").value;
+  const pg=document.getElementById("partnerGender").value;
+  const isMarried=document.getElementById("married").checked;
 
-function generateLink() {
-  const sender = document.getElementById("sender").value.trim();
-  const partner = document.getElementById("partner").value.trim();
-  const sg = document.getElementById("senderGender").value;
-  const pg = document.getElementById("partnerGender").value;
-
-  if (!sender || !partner || !sg || !pg) {
+  if(!sender||!partner||!sg||!pg){
     alert("Please fill all details 💕");
     return;
   }
 
-  sessionStorage.setItem("senderName", sender);
+  sessionStorage.setItem("senderName",sender);
 
-  const y = btoa(unescape(encodeURIComponent(partner)));
-  const g = (sg + pg).toLowerCase();
-  const m = document.getElementById("married").checked ? "1" : "0";
+  const y=btoa(unescape(encodeURIComponent(partner)));
+  const g=(sg+pg).toLowerCase();
+  const m=isMarried?"1":"0";
 
-  const baseURL =
-    location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
+  const baseURL=location.origin+location.pathname.replace(/\/[^\/]*$/,"/");
+  const link=`${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
 
-  generatedLink = `${baseURL}love.html?y=${y}&g=${g}&m=${m}`;
+  const waText=isMarried
+    ? "💍 For my forever person…\n🌹 Still choosing you, every single day ❤️\n👉 click here\n\n"
+    : "💖 I made something special just for you…\n💕 Open it with your heart 🥰\n👉 click here\n\n";
 
-  document.getElementById("linkBox").innerHTML = `
+  document.getElementById("linkBox").innerHTML=`
     <p style="font-size:14px;color:#555;">
-      💕 I made something special just for you<br>
-      💖 Open this and feel my love
+      ${isMarried
+        ? "💍 For my forever person…<br>🌹 Still choosing you, every single day ❤️"
+        : "💖 I made something special just for you…<br>💕 Open it with your heart 🥰"}
     </p>
 
-    <p style="margin:10px 0;">
-      👉 <a href="${generatedLink}" target="_blank" class="hiddenLink">
-        click here
-      </a>
-    </p>
+    <input id="shareLink" value="${link}" readonly
+      style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
 
-    <button id="shareBtn">
-      💌 Share
+    <button id="copyBtn"
+      style="margin-top:8px;background:#4CAF50;">
+      📋 Copy Link
     </button>
 
-    <p style="margin-top:8px;font-size:13px;color:#666;">
-      📌 Copy and share the love 💞
+    <a href="https://wa.me/?text=${encodeURIComponent(waText+link)}"
+       target="_blank"
+       style="
+         display:inline-block;
+         margin-top:10px;
+         background:#25D366;
+         color:#fff;
+         padding:10px 16px;
+         border-radius:25px;
+         text-decoration:none;
+         font-size:14px;
+         font-weight:bold;
+       ">
+       📲 Share on WhatsApp
+    </a>
+
+    <p style="margin-top:8px;font-size:12px;color:#777;">
+      🔒 Copy the link or share — link is hidden behind <b>click here</b>
     </p>
   `;
 }
 
-document.addEventListener("click", function(e) {
-  if (e.target && e.target.id === "shareBtn") {
-    navigator.clipboard.writeText(generatedLink);
-    e.target.innerText = "✅ Link Copied!";
-    setTimeout(() => e.target.innerText = "💌 Share", 2000);
+document.addEventListener("click",e=>{
+  if(e.target && e.target.id==="copyBtn"){
+    const input=document.getElementById("shareLink");
+    input.select();
+    input.setSelectionRange(0,99999);
+    navigator.clipboard.writeText(input.value);
+    e.target.innerText="✅ Copied!";
+    setTimeout(()=>e.target.innerText="📋 Copy Link",2000);
   }
 });
 </script>
